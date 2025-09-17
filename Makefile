@@ -2,7 +2,7 @@ NAME		:= webserv
 CXX			:= c++
 CXXFLAGS	:= -g -Wextra -Wall -Werror -MMD
 
-SRCS		:= 
+SRCS		:= main.cpp
 OBJS		:= $(SRCS:.cpp=.o)
 DEPS		:= $(OBJS:%.o=%.d)
 
