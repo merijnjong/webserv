@@ -2,7 +2,7 @@ NAME		:= webserv
 CXX			:= c++
 CXXFLAGS	:= -g -Wextra -Wall -Werror -MMD
 
-SRCS		:= main.cpp
+SRCS		:= $(shell find ./srcs -name "*.cpp")
 OBJS		:= $(SRCS:.cpp=.o)
 DEPS		:= $(OBJS:%.o=%.d)
 

@@ -6,7 +6,7 @@
 /*   By: mjong <mjong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 12:53:18 by mjong             #+#    #+#             */
-/*   Updated: 2025/09/17 14:06:00 by mjong            ###   ########.fr       */
+/*   Updated: 2025/09/17 14:56:17 by mjong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ int main(int argc, char **argv)
     std::string configFile = "config/default.conf";
     if (argc == 2)
         configFile = argv[1];
-
-    try {
+    try
+	{
         GlobalConfig config = ConfigParser::parse(configFile);
         std::cout << "Config parsed successfully!" << std::endl;
     } catch (const std::exception &e) {

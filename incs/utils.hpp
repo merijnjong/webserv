@@ -1,26 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   webserv.hpp                                        :+:      :+:    :+:   */
+/*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjong <mjong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/17 12:53:14 by mjong             #+#    #+#             */
-/*   Updated: 2025/09/17 15:05:50 by mjong            ###   ########.fr       */
+/*   Created: 2025/09/17 15:04:51 by mjong             #+#    #+#             */
+/*   Updated: 2025/09/17 15:05:27 by mjong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#include "../incs/webserv.hpp"
 
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <stdexcept>
-#include <cctype>
-#include <vector>
-#include <utility>
-#include <cstdlib>
-#include <algorithm>
-#include "utils.hpp"
-
+bool isValidPort(int port);
+bool isValidMethod(const std::string& method);
