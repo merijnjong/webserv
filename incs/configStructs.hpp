@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   configstructs.hpp                                  :+:      :+:    :+:   */
+/*   configStructs.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjong <mjong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 14:43:53 by mjong             #+#    #+#             */
-/*   Updated: 2025/09/17 15:00:55 by mjong            ###   ########.fr       */
+/*   Updated: 2025/09/18 13:50:26 by mjong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-#include <string>
-#include <vector>
-#include <map>
 
-struct LocationConfig {
+#include "webserv.hpp"
+
+struct LocationConfig
+{
     std::vector<std::string> methods;
     std::string path;
     std::string redirect;
@@ -25,7 +25,8 @@ struct LocationConfig {
     bool autoindex;
 };
 
-struct ServerConfig {
+struct ServerConfig
+{
     std::vector<std::pair<std::string, int>> listens;
     std::vector<LocationConfig> locations;
     std::map<int, std::string> error_pages;
@@ -34,7 +35,7 @@ struct ServerConfig {
     size_t client_max_body_size;
 };
 
-struct GlobalConfig {
+struct GlobalConfig
+{
     std::vector<ServerConfig> servers;
 };
-
