@@ -6,12 +6,11 @@
 /*   By: mjong <mjong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:56:57 by mjong             #+#    #+#             */
-/*   Updated: 2025/09/18 15:32:20 by mjong            ###   ########.fr       */
+/*   Updated: 2025/09/25 16:03:29 by mjong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incs/serverCore.hpp"
-#include "../incs/webserv.hpp"
+#include "../../incs/serverCore.hpp"
 
 ServerManager::ServerManager(const GlobalConfig& config) : _config(config) {}
 
@@ -75,4 +74,18 @@ std::vector<struct pollfd> ServerManager::getPollFds() const {
 
 bool ServerManager::isListeningFd(int fd) const {
     return _fdToServer.count(fd) > 0;
+}
+
+size_t ServerManager::getServerIdxForFd(int fd) const {
+    std::map<int, size_t>::const_iterator it = _fdToServer.find(fd);
+    if (it != _fdToServer.end())
+        return it->second;
+    return (0);
+}
+
+size_t ServerManager::getClientMaxBodySizeForFd(int fd) const {
+    size_t idx = getServerIdxForFd(fd);
+    if (idx < _config.servers.size())
+        return _config.servers[idx].client_max_body_size;
+    return (1024 * 1024);
 }

@@ -6,7 +6,7 @@
 /*   By: mjong <mjong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 13:21:29 by mjong             #+#    #+#             */
-/*   Updated: 2025/09/18 13:51:30 by mjong            ###   ########.fr       */
+/*   Updated: 2025/09/25 17:11:11 by mjong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,5 +122,5 @@ GlobalConfig ConfigParser::parse(const std::string &filename) {
             config.servers[s].error_pages[500] = "errors/500.html";
         }
     }
-    return config;
+    return (config);
 }

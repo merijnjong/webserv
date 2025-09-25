@@ -6,7 +6,7 @@
 /*   By: mjong <mjong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 12:53:18 by mjong             #+#    #+#             */
-/*   Updated: 2025/09/18 15:29:40 by mjong            ###   ########.fr       */
+/*   Updated: 2025/09/25 17:08:01 by mjong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,11 @@ int main(int argc, char **argv) {
             return 1;
         }
         std::cout << "Listening sockets set up successfully!" << std::endl;
+        pollLoop(serverManager, config);
     }
     catch (const std::exception &e) {
         std::cerr << "Error parsing config: " << e.what() << std::endl;
-        return 1;
+        return (1);
     }
-    return 0;
+    return (0);
 }

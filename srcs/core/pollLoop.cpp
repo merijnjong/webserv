@@ -6,13 +6,14 @@
 /*   By: mjong <mjong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 15:34:12 by mjong             #+#    #+#             */
-/*   Updated: 2025/09/18 15:34:15 by mjong            ###   ########.fr       */
+/*   Updated: 2025/09/25 17:04:41 by mjong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incs/webserv.hpp"
-#include "../incs/serverCore.hpp"
-#include "../incs/client.hpp"
+#include "../../incs/serverCore.hpp"
+#include "../../incs/client.hpp"
+#include "../../incs/request.hpp"
+#include "../../incs/router.hpp"
 
 void setNonBlocking(int fd) {
     int flags = fcntl(fd, F_GETFL, 0);
@@ -21,7 +22,7 @@ void setNonBlocking(int fd) {
     }
 }
 
-void pollLoop(ServerManager& serverManager) {
+void pollLoop(ServerManager& serverManager, GlobalConfig& config) {
     std::map<int, Client> clients;
     while (true) {
         std::vector<struct pollfd> pollfds = serverManager.getPollFds();
@@ -46,12 +47,13 @@ void pollLoop(ServerManager& serverManager) {
                 int clientFd = accept(fd, NULL, NULL);
                 if (clientFd >= 0) {
                     setNonBlocking(clientFd);
-                    clients[clientFd] = Client(clientFd);
+                    size_t maxBodySize = serverManager.getClientMaxBodySizeForFd(fd);
+                    clients[clientFd] = Client(clientFd, maxBodySize, fd);
                 }
             } else if (clients.count(fd)) {
                 Client& client = clients[fd];
                 if (revents & POLLIN) {
-                    client.handleRead();
+                    client.handleRead(serverManager, client.listeningFd, config);
                 }
                 if (revents & POLLOUT) {
                     client.handleWrite();
