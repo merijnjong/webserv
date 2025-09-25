@@ -6,12 +6,13 @@
 /*   By: mjong <mjong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 12:53:18 by mjong             #+#    #+#             */
-/*   Updated: 2025/09/18 13:04:22 by mjong            ###   ########.fr       */
+/*   Updated: 2025/09/18 15:29:40 by mjong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/webserv.hpp"
 #include "../incs/parsing.hpp"
+#include "../incs/serverCore.hpp"
 
 int main(int argc, char **argv) {
     std::string configFile = "config/default.conf";
@@ -21,7 +22,15 @@ int main(int argc, char **argv) {
     try {
         GlobalConfig config = ConfigParser::parse(configFile);
         std::cout << "Config parsed successfully!" << std::endl;
-    } catch (const std::exception &e) {
+
+        ServerManager serverManager(config);
+        if (!serverManager.setupListeningSockets()) {
+            std::cerr << "Failed to set up listening sockets." << std::endl;
+            return 1;
+        }
+        std::cout << "Listening sockets set up successfully!" << std::endl;
+    }
+    catch (const std::exception &e) {
         std::cerr << "Error parsing config: " << e.what() << std::endl;
         return 1;
     }

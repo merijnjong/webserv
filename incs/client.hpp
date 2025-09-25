@@ -1,34 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   webserv.hpp                                        :+:      :+:    :+:   */
+/*   client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjong <mjong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/17 12:53:14 by mjong             #+#    #+#             */
-/*   Updated: 2025/09/18 15:00:21 by mjong            ###   ########.fr       */
+/*   Created: 2025/09/18 15:33:24 by mjong             #+#    #+#             */
+/*   Updated: 2025/09/18 16:29:16 by mjong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <algorithm>
-#include <arpa/inet.h>
-#include <cctype>
-#include <cerrno>
-#include <cstdlib>
-#include <cstring>
-#include <fcntl.h>
-#include <fstream>
-#include <iostream>
-#include <map>
-#include <netinet/in.h>
-#include <poll.h>
-#include <sstream>
-#include <stdexcept>
-#include <string>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <utility>
-#include <vector>
-#include "utils.hpp"
+#include "webserv.hpp"
+
+enum ClientState {
+    READING_HEADERS,
+    READING_BODY,
+    PROCESSING,
+    WRITING,
+    CLOSED
+};
+
+class Client {
+    public:
+        Client();
+        Client(int fd);
+        void handleRead();
+        void handleWrite();
+        int fd;
+        std::string in;
+        std::string out;
+        ClientState state;
+        size_t written;
+};

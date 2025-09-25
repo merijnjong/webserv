@@ -1,34 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   webserv.hpp                                        :+:      :+:    :+:   */
+/*   serverCore.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjong <mjong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/17 12:53:14 by mjong             #+#    #+#             */
-/*   Updated: 2025/09/18 15:00:21 by mjong            ###   ########.fr       */
+/*   Created: 2025/09/18 14:54:21 by mjong             #+#    #+#             */
+/*   Updated: 2025/09/18 15:35:49 by mjong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <algorithm>
-#include <arpa/inet.h>
-#include <cctype>
-#include <cerrno>
-#include <cstdlib>
-#include <cstring>
-#include <fcntl.h>
-#include <fstream>
-#include <iostream>
-#include <map>
-#include <netinet/in.h>
-#include <poll.h>
-#include <sstream>
-#include <stdexcept>
-#include <string>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <utility>
-#include <vector>
-#include "utils.hpp"
+#include "webserv.hpp"
+#include "parsing.hpp"
+
+class ServerManager {
+    public:
+        ServerManager(const GlobalConfig& config);
+        bool setupListeningSockets();
+        std::vector<struct pollfd> getPollFds() const;
+        bool isListeningFd(int fd) const;
+    private:
+        const GlobalConfig& _config;
+        std::map<int, size_t> _fdToServer;
+        std::vector<struct pollfd> _pollfds;
+};
