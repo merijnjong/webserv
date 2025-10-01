@@ -6,7 +6,7 @@
 /*   By: mjong <mjong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 15:33:24 by mjong             #+#    #+#             */
-/*   Updated: 2025/09/25 17:24:47 by mjong            ###   ########.fr       */
+/*   Updated: 2025/10/01 17:53:07 by mjong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include "webserv.hpp"
 #include "serverCore.hpp"
 #include "configStructs.hpp"
+#include "request.hpp"
+#include "router.hpp"
 
 enum ClientState {
     READING_HEADERS,
@@ -44,4 +46,6 @@ class Client {
         std::string requestLine;
         ClientState state;
         int listeningFd;
+        Request req;
+        RouteResult route;
 };

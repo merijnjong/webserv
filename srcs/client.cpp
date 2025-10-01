@@ -6,7 +6,7 @@
 /*   By: mjong <mjong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 15:37:29 by mjong             #+#    #+#             */
-/*   Updated: 2025/09/25 17:24:07 by mjong            ###   ########.fr       */
+/*   Updated: 2025/10/01 15:04:46 by mjong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,8 @@ void Client::handleHeadersAndRouting(const ServerManager& serverManager, int lis
         headers = headerBlock.substr(firstLineEnd + 1);
         size_t serverIdx = serverManager.getServerIdxForFd(listeningFd);
         const ServerConfig& server = config.servers[serverIdx];
-        Request req = parseRequest(requestLine, headers);
-
-        RouteResult route = resolveRoute(server, req.path);
+        req = parseRequest(requestLine, headers);
+        route = resolveRoute(server, req.path);
         if (route.fsPath.empty()) {
             std::string errorBody;
             std::string errorPath;
@@ -123,7 +122,32 @@ void Client::handleBodyAndProcessing() {
         }
     }
     if (state == PROCESSING) {
-        response = "HTTP/1.1 200 OK\r\nContent-Length: 12\r\n\r\nHello World\n";
+        if (isRegularFile(route.fsPath)) {
+            response = buildFileResponse(route.fsPath, "close");
+        } else if (isDirectory(route.fsPath)) {
+            std::string indexPath = route.fsPath;
+            if (indexPath.back() != '/') indexPath += "/";
+            indexPath += "index.html";
+            if (isRegularFile(indexPath)) {
+                response = buildFileResponse(indexPath, "close");
+            } else if (route.location && route.location->autoindex) {
+                std::string autoIndexHtml = generateAutoIndex(route.fsPath, req.path);
+                response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: " +
+                    std::to_string(autoIndexHtml.size()) + "\r\n\r\n" + autoIndexHtml;
+            } else {
+                std::string errorBody = readFile("errors/403.html");
+                if (errorBody.empty())
+                    errorBody = "<html><body><h1>403 Forbidden</h1></body></html>";
+                response = "HTTP/1.1 403 Forbidden\r\nContent-Type: text/html\r\nContent-Length: " +
+                    std::to_string(errorBody.size()) + "\r\n\r\n" + errorBody;
+            }
+        } else {
+            std::string errorBody = readFile("errors/404.html");
+            if (errorBody.empty())
+                errorBody = "<html><body><h1>404 Not Found</h1></body></html>";
+            response = "HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\nContent-Length: " +
+                std::to_string(errorBody.size()) + "\r\n\r\n" + errorBody;
+        }
         out = response;
         state = WRITING;
     }

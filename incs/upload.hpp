@@ -1,28 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   request.hpp                                        :+:      :+:    :+:   */
+/*   upload.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjong <mjong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/25 14:46:52 by mjong             #+#    #+#             */
-/*   Updated: 2025/10/01 17:47:32 by mjong            ###   ########.fr       */
+/*   Created: 2025/10/01 17:22:22 by mjong             #+#    #+#             */
+/*   Updated: 2025/10/01 17:51:21 by mjong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "webserv.hpp"
+#include "configStructs.hpp"
+#include "request.hpp"
 
-struct Request {
-    std::string method;
-    std::string path;
-    std::string query;
-    std::string httpVersion;
-    std::map<std::string, std::string> headers;
-    std::string uri;
-    std::string body;
+class Uploader {
+public:
+    static std::string handleUpload(const Request& req, const LocationConfig& locationConfig);
+
+private:
+    static std::string saveUrlEncoded(const Request& req, const LocationConfig& loc);
+    static std::string sanitizeFilename(const std::string& filename);
+    static std::string saveMultipart(const Request& req, const LocationConfig& loc);
 };
-
-Request parseRequest(const std::string& requestLine, const std::string& headersBlock);
-std::string normalizeHeader(const std::string& name);
