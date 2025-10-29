@@ -6,12 +6,13 @@
 /*   By: mjong <mjong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 15:00:36 by mjong             #+#    #+#             */
-/*   Updated: 2025/10/01 17:45:17 by mjong            ###   ########.fr       */
+/*   Updated: 2025/10/08 16:11:25 by mjong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incs/router.hpp"
 #include "../../incs/upload.hpp"
+#include "../../incs/deleteHandler.hpp"
 
 bool fileExists(const std::string& path) {
     struct stat st;
@@ -48,8 +49,8 @@ std::string generateAutoIndex(const std::string& dirPath, const std::string& url
 
 std::string makeResponse(int status, const std::string& statusMsg,
                          const std::string& body,
-                         const std::string& contentType = "text/plain",
-                         const std::string& connection = "close")
+                         const std::string& contentType,
+                         const std::string& connection)
 {
     std::ostringstream resp;
     resp << "HTTP/1.1 " << status << " " << statusMsg << "\r\n"
@@ -104,14 +105,7 @@ std::string handleRequest(const Request& req, const LocationConfig& locationConf
         }
     }
     else if (req.method == "DELETE") {
-        std::string fullPath = locationConfig.root + req.path;
-        if (!isRegularFile(fullPath))
-            return makeResponse(404, "Not Found", "File not found\n");
-
-        if (remove(fullPath.c_str()) == 0)
-            return makeResponse(200, "OK", "File deleted\n");
-        else
-            return makeResponse(500, "Internal Server Error", "Failed to delete file\n");
+   		return handleDelete(req, locationConfig);
     }
     else {
         return makeResponse(405, "Method Not Allowed", "Unsupported method\n");

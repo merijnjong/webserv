@@ -1,28 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   request.hpp                                        :+:      :+:    :+:   */
+/*   deleteHandler.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjong <mjong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/25 14:46:52 by mjong             #+#    #+#             */
-/*   Updated: 2025/10/29 12:53:23 by mjong            ###   ########.fr       */
+/*   Created: 2025/10/08 16:01:17 by mjong             #+#    #+#             */
+/*   Updated: 2025/10/08 16:10:13 by mjong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "webserv.hpp"
+#include "request.hpp"
+#include "router.hpp"
+#include "response.hpp"
 
-struct Request {
-    std::string method;
-    std::string path;
-    std::string query;
-    std::string httpVersion;
-    std::map<std::string, std::string> headers;
-    std::string uri;
-    std::string body;
-};
-
-Request parseRequest(const std::string& requestLine, const std::string& headersBlock);
-std::string normalizeHeader(const std::string& name);
+std::string handleDelete(const Request& req, const LocationConfig& loc);
