@@ -6,7 +6,7 @@
 /*   By: mjong <mjong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 14:43:53 by mjong             #+#    #+#             */
-/*   Updated: 2025/10/01 17:48:08 by mjong            ###   ########.fr       */
+/*   Updated: 2025/10/30 15:17:05 by mjong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 #include "webserv.hpp"
 
-struct LocationConfig
-{
+struct LocationConfig {
     std::vector<std::string> methods;
     std::string path;
     std::string redirect;
@@ -26,8 +25,7 @@ struct LocationConfig
     bool autoindex;
 };
 
-struct ServerConfig
-{
+struct ServerConfig {
     std::vector<std::pair<std::string, int>> listens;
     std::vector<LocationConfig> locations;
     std::map<int, std::string> error_pages;
@@ -36,7 +34,6 @@ struct ServerConfig
     size_t client_max_body_size;
 };
 
-struct GlobalConfig
-{
+struct GlobalConfig {
     std::vector<ServerConfig> servers;
 };

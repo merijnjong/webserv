@@ -6,7 +6,7 @@
 /*   By: mjong <mjong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 13:24:48 by mjong             #+#    #+#             */
-/*   Updated: 2025/09/18 13:50:01 by mjong            ###   ########.fr       */
+/*   Updated: 2025/10/30 15:17:17 by mjong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 #include "webserv.hpp"
 #include "configStructs.hpp"
 
-class ConfigParser
-{
+class ConfigParser {
     public:
         static GlobalConfig parse(const std::string &filename);
 };

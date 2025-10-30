@@ -6,17 +6,20 @@
 /*   By: mjong <mjong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 13:21:29 by mjong             #+#    #+#             */
-/*   Updated: 2025/09/25 17:11:11 by mjong            ###   ########.fr       */
+/*   Updated: 2025/10/30 17:05:42 by mjong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incs/parsing.hpp"
 
 void parseLocationBlock(const std::vector<std::string>& tokens, size_t& i, LocationConfig& location) {
-    if (tokens[i] != "{") throw std::runtime_error("Expected '{' after location");
-	++i;
+    if (tokens[i] != "{")
+        throw std::runtime_error("Expected '{' after location");
+    ++i;
+	
     while (i < tokens.size() && tokens[i] != "}") {
         std::string key = tokens[i++];
+
         if (key == "methods") {
             while (tokens[i] != ";") {
                 if (!isValidMethod(tokens[i]))
@@ -24,36 +27,53 @@ void parseLocationBlock(const std::vector<std::string>& tokens, size_t& i, Locat
                 location.methods.push_back(tokens[i++]);
             }
             ++i;
+        } else if (key == "allow_methods") {
+            while (i < tokens.size() && tokens[i] != ";") {
+                if (!isValidMethod(tokens[i]))
+                    throw std::runtime_error("Invalid method in allow_methods: " + tokens[i]);
+                location.methods.push_back(tokens[i++]);
+            }
+            if (tokens[i] != ";")
+                throw std::runtime_error("Missing ';' after allow_methods");
+            ++i;
         } else if (key == "redirect") {
             location.redirect = tokens[i++];
-            if (tokens[i] != ";") throw std::runtime_error("Missing ';' after redirect");
+            if (tokens[i] != ";")
+                throw std::runtime_error("Missing ';' after redirect");
             ++i;
         } else if (key == "root") {
             location.root = tokens[i++];
-            if (tokens[i] != ";") throw std::runtime_error("Missing ';' after root");
+            if (tokens[i] != ";")
+                throw std::runtime_error("Missing ';' after root");
             ++i;
         } else if (key == "autoindex") {
             std::string val = tokens[i++];
             if (val == "on") location.autoindex = true;
             else if (val == "off") location.autoindex = false;
             else throw std::runtime_error("Invalid autoindex value: " + val);
-            if (tokens[i] != ";") throw std::runtime_error("Missing ';' after autoindex");
+            if (tokens[i] != ";")
+                throw std::runtime_error("Missing ';' after autoindex");
             ++i;
         } else if (key == "index") {
             location.index = tokens[i++];
-            if (tokens[i] != ";") throw std::runtime_error("Missing ';' after index");
+            if (tokens[i] != ";")
+                throw std::runtime_error("Missing ';' after index");
             ++i;
         } else if (key == "upload_store") {
             location.upload_store = tokens[i++];
-            if (tokens[i] != ";") throw std::runtime_error("Missing ';' after upload_store");
+            if (tokens[i] != ";")
+                throw std::runtime_error("Missing ';' after upload_store");
             ++i;
         } else {
             throw std::runtime_error("Unknown directive in location: " + key);
         }
     }
-    if (tokens[i] != "}") throw std::runtime_error("Missing '}' at end of location block");
+
+    if (i >= tokens.size() || tokens[i] != "}")
+        throw std::runtime_error("Missing '}' at end of location block");
     ++i;
 }
+
 
 static void parseServerBlock(const std::vector<std::string>& tokens, size_t& i, GlobalConfig& config) {
     if (tokens[i] != "{")
